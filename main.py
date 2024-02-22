@@ -62,11 +62,14 @@ if __name__ == "__main__":
             worksheet.merge_range(f"{start_cell_column}{start_cell_row}:{end_cell_column}{end_cell_row}",
                                   MONTHS[col + row*NUMBER_OF_MONTHS_IN_A_ROW],
                                   workbook.add_format(dict(**BASE_PROPERTIES,
-                                                           **{"bg_color": MONTH_COLORS[col + row*3]})))
+                                                           **{"bg_color":
+                                                              MONTH_COLORS[col + row*NUMBER_OF_MONTHS_IN_A_ROW]})))
             for week_index, week_day in enumerate(["T", *calendar.day_name]):
                 worksheet.write(f"{EXCEL_COLUMNS[EXCEL_COLUMNS.index(start_cell_column) + 
                                                  week_index]}{start_cell_row + 1}", week_day[:3],
-                                workbook.add_format(dict(**BASE_PROPERTIES, **{"bg_color": MONTH_COLORS[col + row*3]})))
+                                workbook.add_format(dict(**BASE_PROPERTIES,
+                                                         **{"bg_color": MONTH_COLORS[col +
+                                                                                     row*NUMBER_OF_MONTHS_IN_A_ROW]})))
         row_length += max(month_columns["number_of_rows"]
                           for month_columns in list(months_table_data.values())
                           [row*NUMBER_OF_MONTHS_IN_A_ROW:row*NUMBER_OF_MONTHS_IN_A_ROW + NUMBER_OF_MONTHS_IN_A_ROW])
