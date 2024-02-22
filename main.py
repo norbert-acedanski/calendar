@@ -98,7 +98,8 @@ if __name__ == "__main__":
         for row, month_data in zip(range(NUMBER_OF_MONTHS_IN_A_COLUMN),
                                    list(months_table_data.values())[::NUMBER_OF_MONTHS_IN_A_COLUMN]):
             row_length = max(month_columns["number_of_rows"] for month_columns in list(months_table_data.values())
-                             [row * NUMBER_OF_MONTHS_IN_A_ROW:row * NUMBER_OF_MONTHS_IN_A_ROW + NUMBER_OF_MONTHS_IN_A_ROW])
+                             [row * NUMBER_OF_MONTHS_IN_A_ROW:
+                              row * NUMBER_OF_MONTHS_IN_A_ROW + NUMBER_OF_MONTHS_IN_A_ROW])
             for row_to_hide in range(1, TABLE_DISTANCE + 1):
                 worksheet.set_row(month_data["start"]["row"] + row_length + 1 + row_to_hide, height=0)
     # Write each day of the month
