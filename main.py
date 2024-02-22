@@ -78,6 +78,28 @@ if __name__ == "__main__":
                                          EXCEL_COLUMNS.index(month["end"]["column"]) + 1]:
             for row_index in range(month["start"]["row"] + 2, month["end"]["row"] + 2 + month["number_of_rows"]):
                 worksheet.write(f"{column_name}{row_index}", "", border_format)
+    # Change size of rows and columns:
+    start_cell_column, start_cell_row_index = list(START_CELL)
+    columns = EXCEL_COLUMNS.index(start_cell_column)
+    columns_to_hide = list(range(1, columns))
+    worksheet.set_column(0, 0, width=0.83)
+    if columns_to_hide:
+        worksheet.set_column(columns_to_hide[0], columns_to_hide[-1], width=0)
+    worksheet.set_row(0, height=7.5)
+    for month_data in list(months_table_data.values())[:NUMBER_OF_MONTHS_IN_A_ROW]:
+        start_column_index = EXCEL_COLUMNS.index(month_data["start"]["column"])
+        end_column_index = EXCEL_COLUMNS.index(month_data["end"]["column"])
+        worksheet.set_column(start_column_index, end_column_index, width=4.43)
+        worksheet.set_column(end_column_index + 1, end_column_index + 1, width=0.83)
+        if TABLE_DISTANCE > 1:
+            worksheet.set_column(end_column_index + 2, end_column_index + 1 + TABLE_DISTANCE, width=0.0)
+    if TABLE_DISTANCE > 1:
+        for row, month_data in zip(range(NUMBER_OF_MONTHS_IN_A_COLUMN),
+                                   list(months_table_data.values())[::NUMBER_OF_MONTHS_IN_A_COLUMN]):
+            row_length = max(month_columns["number_of_rows"] for month_columns in list(months_table_data.values())
+                             [row * NUMBER_OF_MONTHS_IN_A_ROW:row * NUMBER_OF_MONTHS_IN_A_ROW + NUMBER_OF_MONTHS_IN_A_ROW])
+            for row_to_hide in range(1, TABLE_DISTANCE + 1):
+                worksheet.set_row(month_data["start"]["row"] + row_length + 1 + row_to_hide, height=0)
     # Write each day of the month
     days = datetime.datetime(year=YEAR, month=1, day=1).weekday()
     week_number_format = workbook.add_format(dict(**border_format_dict, **{"font_size": 9, "italic": True}))
