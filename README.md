@@ -11,7 +11,7 @@ Script creates an Excel file with your highlighted holidays, national holidays, 
 1. To install all required packages, type `pip install -r requirements.txt` in the terminal.
 1. Construct file with name following the pattern `calendar_{YEAR}.json` with all proper holidays in a given year inside `input_files` directory.
 1. Change the year to run the script for (file `config.py`).
-1. Run script with `python3 main.py`
+1. Run script with `python main.py --year={YEAR}`.
 1. Go to output_files directory and open the result (name is `calendar_{YEAR}.xlsx`).
 
 # Example of `calendar_{YEAR}.json` content
@@ -61,7 +61,6 @@ A single free day should have the following structure:
 ```
 
 # TODO
-- add possibility to pass year as input argument when running the script
 - list all national holidays in the Excel file below the legend
 - add possibility to store national holidays in a separate json file and load into the script
 
