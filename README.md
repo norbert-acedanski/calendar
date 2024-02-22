@@ -62,7 +62,6 @@ A single free day should have the following structure:
 
 # TODO
 - list all national holidays in the Excel file below the legend
-- change size of the columns and rows for and in between tables
 - add possibility to store national holidays in a separate json file and load into the script
 
 # Licence
