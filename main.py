@@ -82,15 +82,16 @@ if __name__ == "__main__":
     start_cell_column, start_cell_row_index = list(START_CELL)
     columns = EXCEL_COLUMNS.index(start_cell_column)
     columns_to_hide = list(range(1, columns))
-    worksheet.set_column(0, 0, width=0.83)
+    EMPTY_COLUMN_WIDTH, EMPTY_ROW_HEIGHT, FILLED_COLUMN_WIDTH = 2.14, 7.5, 4.43
+    worksheet.set_column(0, 0, width=EMPTY_COLUMN_WIDTH)
     if columns_to_hide:
         worksheet.set_column(columns_to_hide[0], columns_to_hide[-1], width=0)
-    worksheet.set_row(0, height=7.5)
+    worksheet.set_row(0, height=EMPTY_ROW_HEIGHT)
     for month_data in list(months_table_data.values())[:NUMBER_OF_MONTHS_IN_A_ROW]:
         start_column_index = EXCEL_COLUMNS.index(month_data["start"]["column"])
         end_column_index = EXCEL_COLUMNS.index(month_data["end"]["column"])
-        worksheet.set_column(start_column_index, end_column_index, width=4.43)
-        worksheet.set_column(end_column_index + 1, end_column_index + 1, width=0.83)
+        worksheet.set_column(start_column_index, end_column_index, width=FILLED_COLUMN_WIDTH)
+        worksheet.set_column(end_column_index + 1, end_column_index + 1, width=EMPTY_COLUMN_WIDTH)
         if TABLE_DISTANCE > 1:
             worksheet.set_column(end_column_index + 2, end_column_index + 1 + TABLE_DISTANCE, width=0.0)
     if TABLE_DISTANCE > 1:
