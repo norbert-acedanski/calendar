@@ -6,7 +6,9 @@ import string
 
 import xlsxwriter
 
-from config import BASE_PROPERTIES, NUMBER_OF_COLUMNS_IN_TABLE, START_CELL, TABLE_DISTANCE, YEAR
+from config import BASE_PROPERTIES, NUMBER_OF_COLUMNS_IN_TABLE, NUMBER_OF_MONTHS_IN_A_COLUMN, \
+    NUMBER_OF_MONTHS_IN_A_ROW, START_CELL, TABLE_DISTANCE, YEAR
+
 from holidays import Holidays
 
 MONTHS = [month.upper() for month in calendar.month_name[1:]]
@@ -46,18 +48,19 @@ if __name__ == "__main__":
         months_table_data[month_index]["number_of_rows"] = number_of_rows
     # Prepare months titles and weekdays for each month
     row_length = 0
-    for row in range(4):
-        for col in range(3):
+    for row in range(NUMBER_OF_MONTHS_IN_A_COLUMN):
+        for col in range(NUMBER_OF_MONTHS_IN_A_ROW):
             start_cell_column = f"{EXCEL_COLUMNS[start_cell_column_index + 
                                                  (NUMBER_OF_COLUMNS_IN_TABLE + TABLE_DISTANCE)*col]}"
             start_cell_row = int(start_cell_row_index) + row_length + row*(TABLE_DISTANCE + 2)
             end_cell_column = f"{EXCEL_COLUMNS[start_cell_column_index + NUMBER_OF_COLUMNS_IN_TABLE*(col + 1) - 1 + 
                                                TABLE_DISTANCE*col]}"
             end_cell_row = int(start_cell_row_index) + row_length + row*(TABLE_DISTANCE + 2)
-            months_table_data[col + row*3].update({"start": {"column": start_cell_column, "row": int(start_cell_row)},
-                                                   "end": {"column": end_cell_column, "row": int(end_cell_row)}})
+            months_table_data[col + row*NUMBER_OF_MONTHS_IN_A_ROW].update(
+                {"start": {"column": start_cell_column, "row": int(start_cell_row)},
+                 "end": {"column": end_cell_column, "row": int(end_cell_row)}})
             worksheet.merge_range(f"{start_cell_column}{start_cell_row}:{end_cell_column}{end_cell_row}",
-                                  MONTHS[col + row*3],
+                                  MONTHS[col + row*NUMBER_OF_MONTHS_IN_A_ROW],
                                   workbook.add_format(dict(**BASE_PROPERTIES,
                                                            **{"bg_color": MONTH_COLORS[col + row*3]})))
             for week_index, week_day in enumerate(["T", *calendar.day_name]):
@@ -65,7 +68,8 @@ if __name__ == "__main__":
                                                  week_index]}{start_cell_row + 1}", week_day[:3],
                                 workbook.add_format(dict(**BASE_PROPERTIES, **{"bg_color": MONTH_COLORS[col + row*3]})))
         row_length += max(month_columns["number_of_rows"]
-                          for month_columns in list(months_table_data.values())[row*3:row*3 + 3])
+                          for month_columns in list(months_table_data.values())
+                          [row*NUMBER_OF_MONTHS_IN_A_ROW:row*NUMBER_OF_MONTHS_IN_A_ROW + NUMBER_OF_MONTHS_IN_A_ROW])
     # Border cells for each month
     border_format_dict = dict(**BASE_PROPERTIES, **{"top": 1, "bottom": 1, "left": 1, "right": 1})
     border_format = workbook.add_format(border_format_dict)
@@ -115,11 +119,12 @@ if __name__ == "__main__":
     # Write legend next to first 3 months to the right
     start_cell_column, start_cell_row_index = list(START_CELL)
     index = int(start_cell_row_index)
+    column = EXCEL_COLUMNS[EXCEL_COLUMNS.index(start_cell_column) +
+                           (NUMBER_OF_COLUMNS_IN_TABLE + TABLE_DISTANCE)*NUMBER_OF_MONTHS_IN_A_ROW]
     for holiday_class in Holidays.get_in_order():
         if not holiday_class.days_off:
             continue
         day_format = dict(**copy.deepcopy(border_format_dict), **{"bg_color": holiday_class.color})
-        column = EXCEL_COLUMNS[EXCEL_COLUMNS.index(start_cell_column) + (NUMBER_OF_COLUMNS_IN_TABLE + TABLE_DISTANCE)*3]
         worksheet.write(f"{column}{index}", f"{holiday_class.name} [{len(holiday_class.days_off)} "
                                             f"DAY{"" if len(holiday_class.days_off) == 1 else "S"}]",
                         workbook.add_format(day_format))
