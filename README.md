@@ -61,7 +61,6 @@ A single free day should have the following structure:
 ```
 
 # TODO
-- list all national holidays in the Excel file below the legend
 - add possibility to store national holidays in a separate json file and load into the script
 
 # Licence
