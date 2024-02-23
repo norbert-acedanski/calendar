@@ -14,7 +14,7 @@ Script creates an Excel file with your highlighted holidays, national holidays, 
 1. Run script with `python main.py --year={YEAR}`.
 1. Go to output_files directory and open the result (name is `calendar_{YEAR}.xlsx`).
 
-# Example of `calendar_{YEAR}.json` content
+## Example of `calendar_{YEAR}.json` content:
 ```json
 {
   "NATIONAL HOLIDAYS ON SATURDAY REPLACEMENT DAYS": [
@@ -59,8 +59,10 @@ A single free day should have the following structure:
 ```json
 {"single_day": {"month": 10, "day": 27}}
 ```
+## Output of the example:
+![img.png](resources/img.png)
 
-# TODO
+# TODO:
 - handle the situation, when TABLE_DISTANCE is more than 1 for printing the holidays and national holidays
 - add possibility to store national holidays in a separate json file and load into the script
 
