@@ -9,7 +9,7 @@ import xlsxwriter
 from config import BASE_PROPERTIES, NUMBER_OF_COLUMNS_IN_TABLE, NUMBER_OF_MONTHS_IN_A_COLUMN, \
     NUMBER_OF_MONTHS_IN_A_ROW, START_CELL, TABLE_DISTANCE, YEAR
 
-from holidays import Holidays
+from holidays import Holidays, NationalDaysOff
 
 MONTHS = [month.upper() for month in calendar.month_name[1:]]
 MONTH_COLORS = {0: "#50BDE8", 1: "#2F8CC7", 2: "#4DB1B1", 3: "#81C383", 4: "#FAB64B", 5: "#F28568",
@@ -148,6 +148,10 @@ if __name__ == "__main__":
     index = int(start_cell_row_index)
     column = EXCEL_COLUMNS[EXCEL_COLUMNS.index(start_cell_column) +
                            (NUMBER_OF_COLUMNS_IN_TABLE + TABLE_DISTANCE)*NUMBER_OF_MONTHS_IN_A_ROW]
+    legend_column_width = 1.06*max(len(f"{holiday_class.name} [{len(holiday_class.days_off)} "
+                                       f"DAY{"" if len(holiday_class.days_off) == 1 else "S"}]")
+                                   for holiday_class in Holidays.get_in_order())
+    worksheet.set_column(f"{column}:{column}", legend_column_width)
     for holiday_class in Holidays.get_in_order():
         if not holiday_class.days_off:
             continue
@@ -156,8 +160,15 @@ if __name__ == "__main__":
                                             f"DAY{"" if len(holiday_class.days_off) == 1 else "S"}]",
                         workbook.add_format(day_format))
         index += 1
-        worksheet.set_column(f"{column}:{column}",
-                             1.06*max(len(f"{holiday_class.name} [{len(holiday_class.days_off)} "
-                                          f"DAY{"" if len(holiday_class.days_off) == 1 else "S"}]")
-                                      for holiday_class in Holidays.get_in_order()))
+    index += 1
+    names_of_national_holidays = [key for key, value in NationalDaysOff.__dict__.items()
+                                  if isinstance(value, datetime.datetime)]
+    day_format = dict(**copy.deepcopy(border_format_dict), **{"bg_color": Holidays.NationalHolidays.color})
+    for name, date in zip(names_of_national_holidays, Holidays.NationalHolidays.days_off):
+        text = " ".join(name.split("_")).title() + f" ({date.strftime("%d %B")})"
+        worksheet.write(f"{column}{index}", text, workbook.add_format(day_format))
+        if len(text) > legend_column_width:
+            legend_column_width = text
+            worksheet.set_column(f"{column}:{column}", legend_column_width)
+        index += 1
     workbook.close()
