@@ -61,6 +61,7 @@ A single free day should have the following structure:
 ```
 
 # TODO
+- handle the situation, when TABLE_DISTANCE is more than 1 for printing the holidays and national holidays
 - add possibility to store national holidays in a separate json file and load into the script
 
 # Licence
