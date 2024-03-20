@@ -6,8 +6,8 @@ import string
 
 import xlsxwriter
 
-from config import BASE_PROPERTIES, NUMBER_OF_COLUMNS_IN_TABLE, NUMBER_OF_MONTHS_IN_A_COLUMN, \
-    NUMBER_OF_MONTHS_IN_A_ROW, START_CELL, TABLE_DISTANCE, YEAR
+from config import BASE_PROPERTIES, DARK_THEME_SPECS, NUMBER_OF_COLUMNS_IN_TABLE, NUMBER_OF_MONTHS_IN_A_COLUMN, \
+    NUMBER_OF_MONTHS_IN_A_ROW, START_CELL, TABLE_DISTANCE, THEME, YEAR
 
 from holidays import Holidays, NationalDaysOff
 
@@ -24,6 +24,11 @@ if __name__ == "__main__":
     workbook = xlsxwriter.Workbook(f"output_files/calendar_{YEAR}.xlsx")
     base_format = workbook.add_format(BASE_PROPERTIES)
     worksheet = workbook.add_worksheet(name="Calendar")
+    if THEME == "dark":
+        for column_name in EXCEL_COLUMNS[:40]:
+            for row_index in range(1, 50):
+                worksheet.write(f"{column_name}{row_index}", "", workbook.add_format(dict(**BASE_PROPERTIES,
+                                                                                          **DARK_THEME_SPECS)))
     start_cell_column, start_cell_row_index = list(START_CELL)
     start_cell_column_index = EXCEL_COLUMNS.index(start_cell_column)
     months_table_data = {index: {} for index in range(12)}
@@ -75,7 +80,7 @@ if __name__ == "__main__":
                           [row*NUMBER_OF_MONTHS_IN_A_ROW:row*NUMBER_OF_MONTHS_IN_A_ROW + NUMBER_OF_MONTHS_IN_A_ROW])
     # Border cells for each month
     border_format_dict = dict(**BASE_PROPERTIES, **{"top": 1, "bottom": 1, "left": 1, "right": 1})
-    border_format = workbook.add_format(border_format_dict)
+    border_format = workbook.add_format(dict(**border_format_dict, **DARK_THEME_SPECS if THEME == "dark" else {}))
     for month_index, month in months_table_data.items():
         for column_name in EXCEL_COLUMNS[EXCEL_COLUMNS.index(month["start"]["column"]):
                                          EXCEL_COLUMNS.index(month["end"]["column"]) + 1]:
@@ -85,11 +90,10 @@ if __name__ == "__main__":
     start_cell_column, start_cell_row_index = list(START_CELL)
     columns = EXCEL_COLUMNS.index(start_cell_column)
     columns_to_hide = list(range(1, columns))
-    EMPTY_COLUMN_WIDTH, EMPTY_ROW_HEIGHT, FILLED_COLUMN_WIDTH = 2.14, 7.5, 4.43
+    EMPTY_COLUMN_WIDTH, FILLED_COLUMN_WIDTH = 2.14, 4.43
     worksheet.set_column(0, 0, width=EMPTY_COLUMN_WIDTH)
     if columns_to_hide:
         worksheet.set_column(columns_to_hide[0], columns_to_hide[-1], width=0)
-    worksheet.set_row(0, height=EMPTY_ROW_HEIGHT)
     for month_data in list(months_table_data.values())[:NUMBER_OF_MONTHS_IN_A_ROW]:
         start_column_index = EXCEL_COLUMNS.index(month_data["start"]["column"])
         end_column_index = EXCEL_COLUMNS.index(month_data["end"]["column"])
@@ -107,7 +111,8 @@ if __name__ == "__main__":
                 worksheet.set_row(month_data["start"]["row"] + row_length + 1 + row_to_hide, height=0)
     # Write each day of the month
     days = datetime.datetime(year=YEAR, month=1, day=1).weekday()
-    week_number_format = workbook.add_format(dict(**border_format_dict, **{"font_size": 9, "italic": True}))
+    week_number_format = workbook.add_format(dict(**border_format_dict, **{"font_size": 9, "italic": True},
+                                                  **DARK_THEME_SPECS if THEME == "dark" else {}))
     for month_index, month in months_table_data.items():
         start_cell_column_index = EXCEL_COLUMNS.index(month["start"]["column"])
         start_cell_row = month["start"]["row"] + 2
@@ -142,6 +147,8 @@ if __name__ == "__main__":
                             day_format = dict(**day_format, **{"bg_color": Holidays.NationalHolidays.color})
                         else:
                             day_format["bg_color"] = Holidays.NationalHolidays.color
+                if "bg_color" not in day_format and THEME == "dark":
+                    day_format.update(DARK_THEME_SPECS)
                 worksheet.write(f"{cell_column}{cell_row}", month_days, workbook.add_format(day_format))
     # Write legend next to first 3 months to the right
     start_cell_column, start_cell_row_index = list(START_CELL)
