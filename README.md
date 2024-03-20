@@ -8,13 +8,13 @@ Script creates an Excel file with your highlighted holidays, national holidays, 
 
 # Getting started
 
+1. Make sure you have Python 3.12 installed ([Python Release Python 3.12.2 | Python.org](https://www.python.org/downloads/release/python-3122/))
 1. To install all required packages, type `pip install -r requirements.txt` in the terminal.
 1. Construct file with name following the pattern `calendar_{YEAR}.json` with all proper holidays in a given year inside `input_files` directory.
-1. Change the year to run the script for (file `config.py`).
-1. Run script with `python main.py --year={YEAR}`.
+1. Run script with `python main.py --year={YEAR} --theme=[ light | dark ]`. Theme parameter is optional. Default is `dark`.
 1. Go to output_files directory and open the result (name is `calendar_{YEAR}.xlsx`).
 
-## Example of `calendar_{YEAR}.json` content:
+## Example of `calendar_{YEAR}.json` content (you can use it as a template):
 ```json
 {
   "NATIONAL HOLIDAYS ON SATURDAY REPLACEMENT DAYS": [
@@ -48,6 +48,15 @@ Script creates an Excel file with your highlighted holidays, national holidays, 
   "SPECIAL OCCASIONS HOLIDAYS": [
     {"start": {"month": 10, "day": 25}, "end": {"month": 10, "day": 26}},
     {"start": {"month": 11, "day": 3}, "end": {"month": 11, "day": 9}}
+  ],
+  "PATERNITY LEAVE": [
+    {"start": {"month": 3, "day": 6}, "end": {"month": 3, "day": 10}}
+  ],
+  "CHILDCARE": [
+    {"single_day": {"month": 2, "day": 28}}
+  ],
+  "OTHER HOLIDAYS": [
+    {"single_day": {"month": 2, "day": 27}}
   ]
 }
 ```
@@ -61,6 +70,9 @@ A single free day should have the following structure:
 ```
 ## Output of the example:
 ![img.png](resources/img.png)
+
+## IMPORTANT
+Only the keys specified in the example above are valid. If you introduce a new one, it will not be taken into account. Use the example as a template.
 
 # TODO:
 - handle the situation, when TABLE_DISTANCE is more than 1 for printing the holidays and national holidays
