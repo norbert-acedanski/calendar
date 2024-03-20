@@ -102,6 +102,18 @@ class Holidays(GenericDefaults):
         days_off = BaseClass.create_days_off(days_off=days_off)
         color = "#3F48CC"
 
+    class PaternityLeave:
+        name = "PATERNITY LEAVE"
+        days_off = BaseClass.load_json_data(file_name=f"input_files/calendar_{YEAR}.json", holiday_category=name)
+        days_off = BaseClass.create_days_off(days_off=days_off)
+        color = "#B97A57"
+
+    class OtherHolidays:
+        name = "OTHER HOLIDAYS"
+        days_off = BaseClass.load_json_data(file_name=f"input_files/calendar_{YEAR}.json", holiday_category=name)
+        days_off = BaseClass.create_days_off(days_off=days_off)
+        color = "#C8BFE7"
+
 
 if len((saturday_holidays := [national_holiday for national_holiday in Holidays.NationalHolidays.days_off
                               if national_holiday.weekday() == 5])) \
