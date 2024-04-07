@@ -42,9 +42,11 @@ class BaseClass:
         for days_off_range in days_off:
             start_day = days_off_range.get("start", days_off_range.get("single_day"))
             end_day = days_off_range.get("end", days_off_range.get("single_day"))
-            delta = datetime.datetime(year=YEAR, month=end_day["month"], day=end_day["day"]) - \
-                                     (start_day := datetime.datetime(year=YEAR, month=start_day["month"],
-                                                                     day=start_day["day"]))
+            start_day = datetime.datetime(year=YEAR, month=start_day["month"], day=start_day["day"])
+            end_day = datetime.datetime(year=YEAR, month=end_day["month"], day=end_day["day"])
+            if start_day > end_day:
+                raise ValueError(f"Starting day ({start_day}) of vacation should be before the end date ({end_day})")
+            delta = end_day - start_day
             dates += [start_day + datetime.timedelta(i) for i in range(delta.days + 1)
                       if (not (start_day + datetime.timedelta(i)).weekday() in [5, 6] or include_weekends)
                       and not start_day + datetime.timedelta(i) in NationalDaysOff.NATIONAL_DAYS_OFF]
