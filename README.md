@@ -1,7 +1,7 @@
 # calendar
 
 # About The Project
-Script creates an Excel file with your highlighted holidays, national holidays, special occasions holidays, blood/plasma donation, etc.
+Script creates an Excel file with your highlighted holidays, national holidays, special occasions holidays, blood/plasma donation, etc. + work-related days (delegations, trainings, etc.).
 
 # Built with
 ### Python 3.12.2
@@ -57,6 +57,15 @@ Script creates an Excel file with your highlighted holidays, national holidays, 
   ],
   "OTHER HOLIDAYS": [
     {"single_day": {"month": 2, "day": 27}}
+  ],
+  "DELEGATIONS": [
+    {"start": {"month": 12, "day": 18}, "end": {"month": 12, "day": 19}}
+  ],
+  "TRAININGS": [
+    {"start": {"month": 4, "day": 26}, "end": {"month": 4, "day": 28}}
+  ],
+  "OTHER WORK RELATED DAYS": [
+    {"single_day": {"month": 12, "day": 13}}
   ]
 }
 ```
