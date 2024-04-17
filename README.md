@@ -86,6 +86,7 @@ Only the keys specified in the example above are valid. If you introduce a new o
 # TODO:
 - handle the situation, when TABLE_DISTANCE is more than 1 for printing the holidays and national holidays
 - add possibility to store national holidays in a separate json file and load into the script
+- add category of marked days above the collection of them + a space between categories
 
 # Licence
 Distributed under the MIT License. See LICENSE file for more information.
