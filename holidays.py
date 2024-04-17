@@ -71,7 +71,7 @@ class Holidays(GenericDefaults):
     class ReplacementDaysForNationalHolidaysOnSaturday:
         name = "REPLACEMENT DAYS FOR NATIONAL HOLIDAYS ON SATURDAY"
         days_off = BaseClass.load_json_data(file_name=f"input_files/calendar_{YEAR}.json", holiday_category=name)
-        days_off = BaseClass.create_days_off(days_off=days_off)  # [datetime.datetime(year=YEAR, month=3, day=29)]
+        days_off = BaseClass.create_days_off(days_off=days_off)
         color = "#00A2E8"
 
     class PlasmaDonationHolidays:
