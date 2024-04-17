@@ -10,6 +10,7 @@ from config import BASE_PROPERTIES, DARK_THEME_SPECS, NUMBER_OF_COLUMNS_IN_TABLE
     NUMBER_OF_MONTHS_IN_A_ROW, START_CELL, TABLE_DISTANCE, THEME, YEAR
 
 from holidays import Holidays, NationalDaysOff
+from work import Work
 
 MONTHS = [month.upper() for month in calendar.month_name[1:]]
 MONTH_COLORS = {0: "#50BDE8", 1: "#2F8CC7", 2: "#4DB1B1", 3: "#81C383", 4: "#FAB64B", 5: "#F28568",
@@ -113,6 +114,7 @@ if __name__ == "__main__":
     days = datetime.datetime(year=YEAR, month=1, day=1).weekday()
     week_number_format = workbook.add_format(dict(**border_format_dict, **{"font_size": 9, "italic": True},
                                                   **DARK_THEME_SPECS if THEME == "dark" else {}))
+    marked_days = [*Holidays.get_in_order(), *Work.get_in_order()]
     for month_index, month in months_table_data.items():
         start_cell_column_index = EXCEL_COLUMNS.index(month["start"]["column"])
         start_cell_row = month["start"]["row"] + 2
@@ -136,7 +138,7 @@ if __name__ == "__main__":
                     month_days -= 1
                     break
                 day_format = copy.deepcopy(border_format_dict)
-                for holiday_class in Holidays.get_in_order():
+                for holiday_class in marked_days:
                     if holiday_class == Holidays.NationalHolidays:
                         continue
                     if current_day in holiday_class.days_off:
@@ -157,9 +159,9 @@ if __name__ == "__main__":
                            (NUMBER_OF_COLUMNS_IN_TABLE + TABLE_DISTANCE)*NUMBER_OF_MONTHS_IN_A_ROW]
     legend_column_width = 1.06*max(len(f"{holiday_class.name} [{len(holiday_class.days_off)} "
                                        f"DAY{"" if len(holiday_class.days_off) == 1 else "S"}]")
-                                   for holiday_class in Holidays.get_in_order())
+                                   for holiday_class in marked_days)
     worksheet.set_column(f"{column}:{column}", legend_column_width)
-    for holiday_class in Holidays.get_in_order():
+    for holiday_class in marked_days:
         if not holiday_class.days_off:
             continue
         day_format = dict(**copy.deepcopy(border_format_dict), **{"bg_color": holiday_class.color})
