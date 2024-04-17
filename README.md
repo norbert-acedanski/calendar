@@ -17,7 +17,7 @@ Script creates an Excel file with your highlighted holidays, national holidays, 
 ## Example of `calendar_{YEAR}.json` content (you can use it as a template):
 ```json
 {
-  "NATIONAL HOLIDAYS ON SATURDAY REPLACEMENT DAYS": [
+  "REPLACEMENT DAYS FOR NATIONAL HOLIDAYS ON SATURDAY": [
     {"single_day": {"month": 11, "day": 10}}
   ],
   "PLASMA DONATION": [
