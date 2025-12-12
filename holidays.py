@@ -86,5 +86,4 @@ class Holidays(GenericDefaults):
 if len((saturday_holidays := [national_holiday for national_holiday in Holidays.NationalHolidays.days_off
                               if national_holiday.weekday() == 5])) \
         != len(Holidays.ReplacementDaysForNationalHolidaysOnSaturday.days_off):
-    warnings.warn(f"Please input all days, that are a replacement for the Holidays,that are on saturday! "
-                  f"{saturday_holidays}")
+    warnings.warn(f"Please input all days, that are a replacement for the Holidays, that are on saturday! {saturday_holidays}")
