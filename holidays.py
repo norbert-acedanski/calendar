@@ -9,9 +9,10 @@ from generics import GenericDefaults, BaseClass
 class NationalDaysOff:
     NEW_YEAR = datetime.datetime(year=YEAR, month=1, day=1)
     EPIPHANY = datetime.datetime(year=YEAR, month=1, day=6)
-    easter_in_selected_year = requests.get(f"https://www.calendardate.com/easter_{YEAR}.htm",
-                                           verify=False).text.split(f"Easter {YEAR} is on")[1].split(", ")[1]
-    EASTER_DAY = datetime.datetime.strptime(f"{YEAR} {easter_in_selected_year}", '%Y %B %d')
+    holidays_in_selected_year = requests.get(
+        f"https://openholidaysapi.org/PublicHolidays?countryIsoCode=PL&languageIsoCode=PL&validFrom={YEAR}-01-01&validTo={YEAR}-12-31").json()
+    easter_in_selected_year = [holiday["startDate"] for holiday in holidays_in_selected_year if holiday["name"][0]["text"] == "Wielkanoc"][0]
+    EASTER_DAY = datetime.datetime.strptime(easter_in_selected_year, '%Y-%m-%d')
     EASTER_MONDAY = EASTER_DAY + datetime.timedelta(days=1)
     LABOUR_DAY = datetime.datetime(year=YEAR, month=5, day=1)
     CONSTITUTION_DAY = datetime.datetime(year=YEAR, month=5, day=3)
